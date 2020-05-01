@@ -7,8 +7,6 @@
 :orgname:       tollwerk GmbH
 :description:   Template repository for Docker based TYPO3 projects
 :keywords:      TYPO3, Docker, Fractal, Tenon
-:toc:
-:toc-title:     Inhalt
 
 The files in this repository are meant to be used as the starting point for a new TYPO3 project based on the https://github.com/tollwerk/docker-tollwerk[Tollwerk Docker images]. Apart from a working Docker setup, only two files are necessary to kickstart a new project following this setup:
 
