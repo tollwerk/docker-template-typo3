@@ -1,0 +1,82 @@
+= Spezifikationstitel
+:author:        Joschi Kuphal
+:email:         joschi@tollwerk.de
+:revdate:       9. Mai 2020
+:revnumber:     1.0.0
+:lang:          de
+:orgname:       tollwerk GmbH
+:description:   Vorlage für Spezifikationdokumente im AsciiDoc-Format
+:keywords:      AsciiDoc
+:toc:
+:toc-title:     Inhalt
+
+[[ueber-dieses-dokument]]
+== Über dieses Dokument
+
+Die vorliegende Spezifikation wurde nach bestem Wissen und Gewissen zusammengestellt. Sie erhebt keinen Anspruch auf Vollständigkeit oder Abgeschlossenheit. Ihre Inhalte werden fortlaufend ergänzt und angepasst.
+
+Bilder, Screenshots oder sonstige Darstellungen dienen lediglich dazu, die zugrunde liegende Funktionalität verständlich zu machen. Die tatsächliche Ausgestaltung ergibt sich im Projektverlauf aus extern beigebrachten Grundlagen, erstellten Designs und iterativem Nutzungsfeedback.
+
+Die Spezifikation thematisiert auch keine technischen Umsetzungsdetails — diese werden an anderer Stelle behandelt. Im Mittelpunkt steht die Beschreibung der Interaktion mit dem Projektgegenstand aus der Sicht der Nutzenden.
+
+<<<
+
+[[einleitung]]
+== Einleitung
+
+_Diese Vorlage kann als Ausgangspunkt für das Verfassen einer Spezifikation dienen. Kursive Texte erläutern, welche echten Inhalte an ihrer statt eingesetzt werden sollten — die kursiven Texte sind in jedem Fall aus dem Dokument zu entfernen. Die Gliederung bzw. Überschriftenstruktur dieser Vorlage sollte im Allgemeinen beibehalten und übernommen werden. Im Bereich der <<ansichten,Ansichten>> sollten natürlich weitere Überschriften bzw. Unterkapitel ergänzt werden. Bei Bedarf können der Gliederung auch noch weitere Abschnitte hinzugefügt werden._
+
+.Thema der Einleitung:
+* _Worum geht es bei diesem Projekt?_
+* _Was ist das Thema?_
+* _Was wurde zur Beauftragung kommuniziert_
+
+[[ziele]]
+=== Ziele
+
+* _Was sind die erklärten Ziele des Projekts?_
+
+[[nicht-ziele]]
+=== Nicht-Ziele
+
+* _Was gehört ausdrücklich nicht zum erwarteten Ergebnis?_
+
+<<<
+
+[[szenarien]]
+== Szenarien
+
+* _Mindestens 1 Nutzungsszenario, das die Aufgabe des Projektgegenstands möglichst plakativ beschreibt_
+* _Szenarien machen sich in der Regel an "`Personas`", also fiktiven, prototypischen Nutzern fest_
+* _Szenarien sollten eingängig, realistisch und detailliert sein. Humorvolle Aspekte unterstützen die Eingängigkeit._
+
+.Beispielszenario
+======================================================================
+[quote, Joel Spolksy]
+Mike is a busy executive. He is the president of a large, important company that makes dynamite-based products for children which are sold through national chains such as Toys ‘R’ Us. During the course of a typical day, he has many meetings with many very important people. Sometimes a man comes over from the bank to harass him for not paying the interest that was due three months ago on his line of credit. Sometimes another man comes from another bank trying to get him to sign up for another line of credit. Sometimes his venture capitalists (the nice people who gave Mike the money to start his business) visit him to complain that he is earning too much money. “A bonfire!” they demand. “Wall Street likes to see a bonfire!”
+======================================================================
+
+<<<
+
+[[uebersicht]]
+== Übersicht
+
+_An dieser Stelle können übergeordnete Visualisierungen, Flowcharts, Skizzen und / oder eine allgemeine Beschreibungen untergebracht werden. Ziel ist es, den großen Zusammenhang zu verdeutlichen, bevor einzelne Ansichten ausgeführt werden._
+
+[[ansichten]]
+== Ansichten
+
+_Es folgt eine detaillierte Beschreibung aller wesentlichen Ansichten des Projektgegenstandes. Die Gliederungsüberschriften — und damit die *Namen der Ansichten* — spielen eine wichtige Rolle und sollten wohlüberlegt sein: Sie dienen den Projektbeteiligten als kanonische Namen für die Ansichten und gehen damit in die https://de.wikipedia.org/wiki/Dom%C3%A4nenspezifische_Sprache[domänenspezifischen Sprache] des Projekts ein (im folgenden Beispiel "`Registrierung`")._
+
+=== Registrierung
+
+* _Die Detaillierung einer Ansicht enthält *Beschreibungen, Bilder, Screenshots* und sonstige Medien, die dabei helfen, die Funktionsweise der Ansicht aus verschiedenen Richtungen zu beleuchten._
+* _Es können gar nicht genug *Details* dargestellt werden. Die Funktionsweise der Ansicht sollte Schritt für Schritt beschrieben sein. Auch *mögliche Probleme* bei der Nutzung sollten bedacht und beschrieben werden, etwa das Fehlerverhalten bei Formularen. Alle diese Fälle entsprechen *Entscheidungen, die von irgendwem getroffen werden müssen* — oder Entwürfen, die entwickelt werden müssen, oder Code, der geschrieben werden muss… Es ist die Aufgabe der Spezifikation, diese Entscheidungen zu dokumentieren._
+* _Wenn sich bestimmte Funktionsweisen wiederholen, oder sie so generisch sind, dass sich eine ausgelagerte Dokumentation lohnt, dann können diese z.B. im Abschnitt <<funktionsweise,Funktionsweisen>> beschrieben und verlinkt werden._
+
+NOTE: _Im Anfangsstadium einer Spezifikation ist es sinnvoll, auch offene Fragen oder Entscheidungen, die noch zu treffen sind, im Dokument unterzubringen. Es bietet sich an, diese als Hinweisblöcke (wie dieser hier) zu formatieren, so dass sie schnell gefunden werden können. Bevor es an die Umsetzung des Projekts geht, sollten jedoch alle solche Blöcke aufgelöst worden sein._
+
+[[funktionsweise]]
+== Funktionsweise
+
+_Dieser Abschnitt ist ein Platzhalter und könnte für zentral dokumentierte, häufiger vorkommende Grundlagen genutzt werden. Er kann dazu auch umbenannt oder weiter untergliedert werden. Sollte er nicht benötigt werden, so kann er auch entfernt werden._
