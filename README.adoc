@@ -73,6 +73,8 @@ cd public/fileadmin
 └── .gitignore
 ----
 +
+The `post-merge` hook will watch out for a file named `database.sql` in the root directory of the repository which should contain a database dump corresponding to the file contents in the directory. Whenever the dump changes, an indicator file named `database.IMPORT_RESET` will be created. During startup, the TYPO3 docker container will look for the presence of this file (`public/fileadmin/database.IMPORT_RESET`) and — if present — replace the database with the contents of `database.sql` (and remove the indicator file afterwards).
++
 ..githooks/post-merge
 [source,bash]
 ----
@@ -92,6 +94,8 @@ check_run database.sql "touch database.IMPORT_RESET"
 ----
 +
 TIP: You may copy the hook file of the same name from the main repository and just change the last two lines.
++
+Temporary files (e.g. images) as well as the database update indicator shouldn't go to the repository:
 +
 ..gitignore
 [source,bash]
