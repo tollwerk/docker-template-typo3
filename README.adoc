@@ -1,4 +1,4 @@
-= docker-template-typo3
+= Docker + TYPO3 (Template)
 :author:        Joschi Kuphal
 :email:         joschi@tollwerk.de
 :revdate:       May 1st, 2020
@@ -19,22 +19,22 @@ Before you can start working on your project on potentially many development mac
 
 On the command line of your machine, change to the directory where your project should live and **create a shallow clone** of this repository (replace `<new_project_name>` accordingly):
 
-1. Navigate to your **project's parent directory**.
+. Navigate to your **project's parent directory**.
 +
 ----
 cd /path/to/project/parent
 ----
-2. Create a **shallow clone** of this repository (replace `<new_project_name>`).
+. Create a **shallow clone** of this repository (replace `<new_project_name>`).
 +
 ----
 git clone --depth=1 https://github.com/tollwerk/docker-template-typo3.git <new_project_name>
-----  
-3. Remove the tracking link to the original template repository.
+----
+. Remove the tracking link to the original template repository.
 +
 ----
 git remote remove origin
 ----
-4. Reset ownership to yourself.
+. Reset ownership to yourself.
 +
 ----
 git commit --amend --reset-author -m "Initial Commit"
@@ -42,8 +42,8 @@ git commit --amend --reset-author -m "Initial Commit"
 
 == Configuration & installation
 
-1. Rename the `.env.example` to `.env` and edit the environment variables inside to match your project requirements.
-2. Let Docker bring up the containers and install the rest of the project.
+. Rename the `.env.example` to `.env` and edit the environment variables inside to match your project requirements.
+. Let Docker bring up the containers and install the rest of the project.
 +
 ----
 docker-compose up
@@ -52,17 +52,88 @@ docker-compose up
 [CAUTION]
 Please be patient during the first start of the the Docker containers. There's a lot _composer_ has to install at this stage.
 
+=== Dynamic production state updates
+
+As soon as Docker has launched for the first time, a fresh TYPO3 instance should have been installed to your file system. In order to have updateable production states (data files and database contents), the `fileadmin` directory of your TYPO3 instance must be put under the control of a separate Git repository which is later included as a submodule of the main repository.
+
+. Create a new online repository for your project's `fileadmin`.
+. Copy the unique URL for your new repository to your clipboard.
+. Change to the `fileadmin` directory:
++
+[source,bash]
+----
+cd public/fileadmin
+----
+. In your local repository, from the command line, Create the following directory / file structure:
++
+[source,bash]
+----
+├── .githooks
+│   └── post-merge
+└── .gitignore
+----
++
+..githooks/post-merge
+[source,bash]
+----
+#!/usr/bin/env bash
+
+# git hook to run a command after `git pull` if a specified file was changed
+# Run `chmod +x post-merge` to make it executable then put it into `.githooks/`.
+
+changed_files="$(git diff-tree -r --name-only --no-commit-id ORIG_HEAD HEAD)"
+
+check_run() {
+	echo "$changed_files" | grep --quiet "$1" && eval "$2"
+}
+
+# Drop update indicators for database
+check_run database.sql "touch database.IMPORT_RESET"
+----
++
+TIP: You may copy the hook file of the same name from the main repository and just change the last two lines.
++
+..gitignore
+[source,bash]
+----
+_temp_
+_processed_
+/database.IMPORT_RESET
+----
+. Make the Git hook executable, initialize the repository (replace the origin path with your clipboard content) and register the custom hook directory:
++
+[source,bash]
+----
+# Change to the fileadmin directory
+chmod +x .githooks/post-merge
+git init
+git remote add origin <new_project_fileadmin_repo_URL>
+git config --local core.hooksPath .githooks/
+----
+. Commit and push to a branch (usually `master`).
++
+[source,bash]
+----
+git add .
+git commit -m "Initial commit"
+git push -u origin master
+----
+
 == Push to a remote repository
 
-1. Create a new online repository for your project.
-2. Copy the unique URL for your new repository to your clipboard.
-3. In your local repository, from the command line, add the remote tracking information for the new repository.
+. Create a new online repository for your project.
+. Copy the unique URL for your new repository to your clipboard.
+. In your local repository, from the command line, add the remote tracking information for the new repository and register the `fileadmin` repository as a submodule.
 +
 ----
 git remote add origin <new_project_repo_URL>
+git submodule add <new_project_fileadmin_repo_URL> public/fileadmin
 ----
-4. Push to a branch (usually `master`).
+. Commit and push to a branch (usually `master`).
 +
+[source,bash]
 ----
-git push --set-upstream origin master
+git add .
+git commit -m "Initial commit"
+git push -u origin master
 ----
