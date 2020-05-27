@@ -15,7 +15,10 @@ The files in this repository are meant to be used as the starting point for a ne
 
 == Project kick-off
 
-Before you can start working on your project on potentially many development machines, you have to create and configure an **original instance** which will also be used for your initial Git commit.
+Before you can start working on your project on potentially many development machines, you have to create and configure an **original instance** which will also be used for your initial Git commits.
+
+[IMPORTANT]
+This has to be done on one of the *workstations* which will also be used for development purposes later on.
 
 On the command line of your machine, change to the directory where your project should live and **create a shallow clone** of this repository (replace `<new_project_name>` accordingly):
 
@@ -56,15 +59,18 @@ Please be patient during the first start of the the Docker containers. There's a
 
 As soon as Docker has launched for the first time, a fresh TYPO3 instance should have been installed to your file system. In order to have updateable production states (data files and database contents), the `fileadmin` directory of your TYPO3 instance must be put under the control of a separate Git repository which is later included as a submodule of the main repository.
 
-. Create a new online repository for your project's `fileadmin`.
-. Copy the unique URL for your new repository to your clipboard.
-. Change to the `fileadmin` directory:
+[TIP]
+The following instructions use Linux commands. On windows workstations you may use the Git Bash that comes with your Git installation to execute these commands.
+
+. Create a new online repository for your project's `fileadmin`. This repository is referred to as the *Data Repository*.
+. Copy the unique repository URL (SSH) to your clipboard.
+. On your workstation, from the command line, change to the `fileadmin` directory of your original instance:
 +
 [source,bash]
 ----
 cd public/fileadmin
 ----
-. In your local repository, from the command line, Create the following directory / file structure:
+. Create the following directory / file structure:
 +
 [source,bash]
 ----
@@ -73,7 +79,7 @@ cd public/fileadmin
 └── .gitignore
 ----
 +
-The `post-merge` hook will watch out for a file named `database.sql` in the root directory of the repository which should contain a database dump corresponding to the file contents in the directory. Whenever the dump changes, an indicator file named `database.IMPORT_RESET` will be created. During startup, the TYPO3 docker container will look for the presence of this file (`public/fileadmin/database.IMPORT_RESET`) and — if present — replace the database with the contents of `database.sql` (and remove the indicator file afterwards).
+The `post-merge` hook will watch out for a file named `database.sql` in the root directory of the repository which should contain a database dump corresponding to the file contents in the directory. Whenever the dump changes, an indicator file named `database.IMPORT_RESET` will be created. During startup, the https://github.com/tollwerk/docker-tollwerk/tree/master/typo3[TYPO3 docker container] will look for the presence of this file (`public/fileadmin/database.IMPORT_RESET`) and — if present — replace the database with the contents of `database.sql` (and remove the indicator file afterwards).
 +
 ..githooks/post-merge
 [source,bash]
@@ -95,7 +101,7 @@ check_run database.sql "touch database.IMPORT_RESET"
 +
 TIP: You may copy the hook file of the same name from the main repository and just change the last two lines.
 +
-Temporary files (e.g. images) as well as the database update indicator shouldn't go to the repository:
+Temporary files (e.g. images) as well as the database update indicator should never go to the repository, so add these lines to your `.gitignore`:
 +
 ..gitignore
 [source,bash]
@@ -104,7 +110,7 @@ _temp_
 _processed_
 /database.IMPORT_RESET
 ----
-. Make the Git hook executable, initialize the repository (replace the origin path with your clipboard content) and register the custom hook directory:
+. Make the Git hook executable, initialize the repository (replace the origin path with your clipboard content / the *Data Repository URL*) and register the custom hook directory:
 +
 [source,bash]
 ----
@@ -125,14 +131,15 @@ git push -u origin master
 
 == Push to a remote repository
 
-. Create a new online repository for your project.
-. Copy the unique URL for your new repository to your clipboard.
-. In your local repository, from the command line, add the remote tracking information for the new repository and register the `fileadmin` repository as a submodule.
+. Create a new online repository for your project. This repository is referred to as the *Project Repository*.
+. Copy the unique repository URL (SSH) to your clipboard.
+. On your workstation, from the command line, change to the root directory of your original instance, add the remote tracking information for the project repository and register the `fileadmin` repository (Data Repository) as a submodule.
 +
 ----
 git remote add origin <new_project_repo_URL>
 git submodule add <new_project_fileadmin_repo_URL> public/fileadmin
 ----
+. Empty this very `README.adoc` file and adapt it you your needs matching the new project's requirements.
 . Commit and push to a branch (usually `master`).
 +
 [source,bash]
@@ -141,3 +148,12 @@ git add .
 git commit -m "Initial commit"
 git push -u origin master
 ----
+
+== Start developing
+
+You're now ready to checkout the project repository on other workstations and start developing. Here are some important things to keep in mind:
+
+* Whenever you pick up development work (e.g. in the morning), start by updating your local repositories from the upstream origin. This is important for *both the project and the data repository*.
+* *Never push to the data repository*. Only an authorized preview / demo instance should be allowed to do so, and this should be enforced by according Git privileges.
+* Whenever you see the files `composer.NEEDS_UPDATE` or `package.NEEDS_UPDATE` in your root directory, it's a sign that either the composer or Node.js packages need to be updated. Do this by running `composer install` respectively `npm install` from the command line in your instance root directory.
+* If you feel like (manually) resetting the database to the latest "official" state, create an (empty) `database.INSTALL_RESET` file in your `fileadmin` directory and restart the `web` Docker container.
