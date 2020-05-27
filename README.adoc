@@ -51,6 +51,22 @@ git commit --amend --reset-author -m "Initial Commit"
 == Configuration & installation
 
 . Rename the `.env.example` to `.env` and edit the environment variables inside to match your project requirements. For this purpose, you may open the project in your favourite editor / IDE for the first time.
++
+[IMPORTANT]
+--
+If you're planning to run a dedicated instance on a (non-Docker) preview server (Tollwerk internal), it's important to use the database credentials that are used on the preview server. Set the following environment variables accordingly:
+
+* `TYPO3_INSTALL_DB_USER`
+* `TYPO3_INSTALL_DB_PASSWORD`
+* `TYPO3_INSTALL_DB_DBNAME`
+* `MYSQL_DATABASE`
+* `MYSQL_USER`
+* `MYSQL_PASSWORD`
+* `PMA_USER`
+* `PMA_PASSWORD`
+
+The database host (`TYPO3_INSTALL_DB_HOST`, `PMA_HOST`) is always set to `mysql`
+--
 . Let Docker bring up the containers and install TYPO3 and other components:
 +
 ----
