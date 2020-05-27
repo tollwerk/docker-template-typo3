@@ -171,7 +171,7 @@ _processed_
 # Change to the fileadmin directory
 chmod +x .githooks/post-merge
 git init
-git remote add origin <new_project_fileadmin_repo_URL>
+git remote add origin <new_data_repo_URL>
 git config --local core.hooksPath .githooks/
 ----
 . Commit and push to a branch (usually `master`).
@@ -191,7 +191,7 @@ git push -u origin master
 +
 ----
 git remote add origin <new_project_repo_URL>
-git submodule add <new_project_fileadmin_repo_URL> public/fileadmin
+git submodule add <new_data_repo_URL> public/fileadmin
 ----
 . Empty this very `README.adoc` file and adapt it you your needs matching the new project's requirements.
 . Commit and push to a branch (usually `master`).
