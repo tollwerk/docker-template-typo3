@@ -183,7 +183,7 @@ git commit -m "Initial commit"
 git push -u origin master
 ----
 
-== Push to a remote repository
+=== Push to a remote repository
 
 . Create a new online repository for your project. This repository is referred to as the *Project Repository*.
 . Copy the unique repository URL (SSH) to your clipboard.
@@ -201,6 +201,40 @@ git submodule add <new_project_fileadmin_repo_URL> public/fileadmin
 git add .
 git commit -m "Initial commit"
 git push -u origin master
+----
+
+== TYPO3 setup
+
+In order to finalize the initial TYPO3 setup you need to perform the following steps. Please make sure that the Docker containers are running (`docker compose up`).
+
+[NOTE]
+The following instructions intentionally don't include screenshots to keep them text-only and as lean as possible.
+
+. Log into your TYPO3 instance by visiting https://localhost/typo3 with your browser and using the credentials found in your `.env` file (defaulting to `admin` / `sEcr3tWith8CharsMin!`).
+. Edit the main TypoScript template of your site using the _Template_ module:
+** Replace the default _Setup_ code with the following (adapt `tw_demo` to your project extension key as per `.env` configuration):
++
+----
+<INCLUDE_TYPOSCRIPT: source="FILE:EXT:tw_demo/Configuration/TypoScript/Main/10_main.typoscript">
+config.contentObjectExceptionHandler = 0
+----
+** _Include_ the TypoScript setup of the `tw_base` and `tw_demo` (adapt to your needs) extensions (and potentially add `tw_componentlibrary`, `form` etc.).
+** Empty the default template _Note_ (or adapt to your needs).
+. Pick the _Standard_ backend layout for the root page add the `tw_base` and `tw_demo` (adapt to your needs) extension TSConfig under _Include static Page TSconfig (from extensions)_.
+
+You're almost ready for development now. In a final step, you should push this blank TYPO3 state to the data repository so that others can make use of it.
+
+. From the command line, let the `web` Docker container create a dump of the current database state into the `fileadmin` directory.
++
+----
+docker exec web sh -c "mysqldump -h mysql -u user --password=password db > /www/public/fileadmin/database.sql"
+----
+. From your project instance's root directory, commit and push the current production state to the data repository:
++
+----
+cd public/fileadmin
+git add .
+git commit -m "Add initial database state"
 ----
 
 == Start developing
