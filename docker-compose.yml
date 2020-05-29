@@ -2,7 +2,6 @@ version: '3'
 services:
     web:
         image: hub.tollwerk.net/tollwerk/typo3:latest
-        container_name: web
         ports:
             - "80:80"
         volumes:
@@ -17,7 +16,6 @@ services:
             - mysql
     php:
         image: hub.tollwerk.net/tollwerk/php${PHP_VERSION}:latest
-        container_name: php
         volumes:
             - .:/www
         networks:
@@ -26,7 +24,6 @@ services:
             - .env
     mysql:
         image: mysql:${MYSQL_VERSION}
-        container_name: mysql
         restart: always
         env_file:
             - .env
@@ -39,7 +36,6 @@ services:
             - backend
     phpmyadmin:
         image: phpmyadmin/phpmyadmin
-        container_name: phpmyadmin
         restart: always
         env_file:
             - .env
