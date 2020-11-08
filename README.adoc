@@ -190,13 +190,13 @@ git init
 git remote add origin <new_data_repo_URL>
 git config --local core.hooksPath .githooks/
 ----
-. Commit and push to a branch (usually `master`).
+. Commit and push to a branch (usually `main`).
 +
 [source,bash]
 ----
 git add .
 git commit -m "Initial commit"
-git push -u origin master
+git push -u origin main
 ----
 
 === Push to a remote repository
@@ -210,13 +210,13 @@ git remote add origin <new_project_repo_URL>
 git submodule add <new_data_repo_URL> public/fileadmin
 ----
 . Empty this very `README.adoc` file and adapt it you your needs matching the new project's requirements.
-. Commit and push to a branch (usually `master`).
+. Commit and push to a branch (usually `main`).
 +
 [source,bash]
 ----
 git add .
 git commit -m "Initial commit"
-git push -u origin master
+git push -u origin main
 ----
 
 == TYPO3 setup
