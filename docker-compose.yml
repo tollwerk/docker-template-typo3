@@ -15,7 +15,7 @@ services:
             - php
             - mysql
     php:
-        image: hub.tollwerk.net/tollwerk/php${PHP_VERSION}:latest
+        image: hub.tollwerk.net/tollwerk/php:latest
         volumes:
             - .:/www
         networks:
