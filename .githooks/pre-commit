@@ -26,7 +26,7 @@ if [ "$STAGED_FILES_PHP" != "" ]; then
     fi
 
     # Running PHP Copy/Paste Detector (phpcpd)
-    vendor/bin/phpcpd public/typo3conf/ext/tw_blueprint/ --min-lines=50
+    vendor/bin/phpcpd public/typo3conf/ext/tw_tollwerk/ --min-lines=50
     if [ $? != 0 ]; then
         echo "Fix the error(s) before commit."
         exit 3

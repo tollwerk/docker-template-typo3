@@ -38,6 +38,7 @@
 /.gitlab-ci.yml export-ignore
 /.gitmodules export-ignore
 /.idea export-ignore
+/.stylelintignore export-ignore
 /.stylelintrc.json export-ignore
 
 # Ignore directories

@@ -1,54 +1,54 @@
 version: '3'
 services:
-    web:
-        image: hub.tollwerk.net/tollwerk/typo3:latest
-        ports:
-            - "80:80"
-        volumes:
-            - .:/www
-        networks:
-            - backend
-            - frontend
-        env_file:
-            - .env
-        depends_on:
-            - php
-            - mysql
-    php:
-        image: hub.tollwerk.net/tollwerk/php:latest
-        volumes:
-            - .:/www
-        networks:
-            - backend
-        env_file:
-            - .env
-    mysql:
-        image: mysql:${MYSQL_VERSION}
-        restart: always
-        env_file:
-            - .env
-        expose:
-            - '3306'
-        volumes:
-            - db:/var/lib/mysql
-        command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci', '--default-authentication-plugin=mysql_native_password']
-        networks:
-            - backend
-    phpmyadmin:
-        image: phpmyadmin/phpmyadmin
-        restart: always
-        env_file:
-            - .env
-        ports:
-            - "81:80"
-        depends_on:
-            - mysql
-        networks:
-            - backend
+  web:
+    image: hub.tollwerk.net/tollwerk/typo3:${PHP_VERSION}
+    ports:
+      - "80:80"
+    volumes:
+      - .:/www
+    networks:
+      - backend
+      - frontend
+    env_file:
+      - .env
+    depends_on:
+      - php
+      - mysql
+  php:
+    image: hub.tollwerk.net/tollwerk/php:${PHP_VERSION}
+    volumes:
+      - .:/www
+    networks:
+      - backend
+    env_file:
+      - .env
+  mysql:
+    image: mysql:${MYSQL_VERSION}
+    restart: always
+    env_file:
+      - .env
+    expose:
+      - '3306'
+    volumes:
+      - db:/var/lib/mysql
+    command: [ 'mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci', '--default-authentication-plugin=mysql_native_password' ]
+    networks:
+      - backend
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "81:80"
+    depends_on:
+      - mysql
+    networks:
+      - backend
 
 networks:
-    frontend:
-    backend:
+  frontend:
+  backend:
 
 volumes:
-    db:
+  db:

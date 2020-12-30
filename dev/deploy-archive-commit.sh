@@ -8,6 +8,7 @@ HOST=
 USER=
 PORT=22
 ARTIFACTS=
+DEV="--no-dev"
 
 for i in "$@"; do
     case $i in
@@ -34,6 +35,9 @@ for i in "$@"; do
         ;;
     -b=* | --branch=*)
         BRANCH="${i#*=}"
+        ;;
+    -d | --dev)
+        DEV="--dev"
         ;;
     *)
         # unknown option
@@ -87,7 +91,8 @@ done
 CMD="mkdir -p '$RELEASE_DIR' && git clone --depth 1 $REPOSITORY '$WORK_DIR' && cd '$WORK_DIR' && git reset --hard '$COMMIT'"
 CMD="$CMD && ( git archive $COMMIT | tar x -C '$RELEASE_DIR') && cd '$RELEASE_DIR'"
 CMD="$CMD && curl --show-error --silent "https://getcomposer.org/installer" | php"
-CMD="$CMD && php7.4 composer.phar install -o"
+CMD="$CMD && php7.4 composer.phar install -o $DEV"
+CMD="$CMD && rm -rf '$RELEASE_DIR/config' && ln -nfs '$TARGET/config' '$RELEASE_DIR/config'"
 CMD="$CMD && rm -rf '$RELEASE_DIR/public/fileadmin' && ln -nfs '$TARGET/fileadmin' '$RELEASE_DIR/public/fileadmin'"
 CMD="$CMD && rm -rf '$RELEASE_DIR/public/typo3conf/LocalConfiguration.php' && ln -nfs '$TARGET/LocalConfiguration.php' '$RELEASE_DIR/public/typo3conf/LocalConfiguration.php'"
 CMD="$CMD && rm -rf '$RELEASE_DIR/public/typo3conf/PackageStates.php' && ln -nfs '$TARGET/PackageStates.php' '$RELEASE_DIR/public/typo3conf/PackageStates.php'"

@@ -12,4 +12,7 @@
     <rule ref="PSR12">
         <exclude name="PSR2.ControlStructures.SwitchDeclaration"/>
     </rule>
+    <rule ref="Squiz.Classes.ValidClassName">
+        <exclude-pattern>public/typo3conf/ext/tw_blueprint/Components</exclude-pattern>
+    </rule>
 </ruleset>

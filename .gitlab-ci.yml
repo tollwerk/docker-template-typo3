@@ -27,7 +27,8 @@ composer:
     - php -v
     - composer install --prefer-dist --no-ansi --no-interaction --no-progress --no-scripts
     - cp .env.example .env
-#    - echo "CUSTOM_VARIABLE=$CUSTOM_VARIABLE" >> .env
+    - echo "PROJECT_KEY=$PROJECT_KEY" >> .env
+    - echo "TYPO3_PROJECT_EXTENSION=$TYPO3_PROJECT_EXTENSION" >> .env
   artifacts:
     paths:
       - vendor/
@@ -157,7 +158,7 @@ staging:
     - chmod 0755 ./dev/deploy-archive-commit.sh
   script:
     - >
-      ./dev/deploy-archive-commit.sh
+      ./dev/deploy-archive-commit.sh --dev
       --repository="git@gitlab.tollwerk.net:tollwerk/blueprint-projekt.git" --branch="$CI_DEFAULT_BRANCH" --commit="$CI_COMMIT_SHA"
       --host="$STAGING_HOST" --user="$STAGING_USER" --port="$STAGING_PORT"
       --target="$STAGING_TARGET_DIRECTORY" --artifacts="public/typo3conf/ext/tw_blueprint/Resources/Public public/typo3temp/assets"
