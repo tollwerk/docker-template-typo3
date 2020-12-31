@@ -159,6 +159,7 @@ You should protect binary files from being treated as text files by adding `.git
 *.ttf binary
 *.eot binary
 *.woff binary
+*.woff2 binary
 *.pyc binary
 *.pdf binary
 
