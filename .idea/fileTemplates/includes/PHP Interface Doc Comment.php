@@ -2,9 +2,9 @@
  * Interface ${NAME}
  *
 #if (${NAMESPACE}) * @category ${NAMESPACE}
-#else  * @category Tollwerk_Blueprint
+#else  * @category Tollwerk
 #end
- * @package  Tollwerk_Blueprint
+ * @package  Tollwerk
  * @author   ${USER} <${USER}@tollwerk.de>
  * @license  MIT https://opensource.org/licenses/MIT
  * @link     https://tollwerk.de

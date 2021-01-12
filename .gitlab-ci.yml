@@ -1,4 +1,4 @@
-image: hub.tollwerk.net/tollwerk/php-ci:latest
+image: hub.tollwerk.net/tollwerk/php-ci:7.4
 
 cache:
   key: ${CI_COMMIT_REF_SLUG}
@@ -16,7 +16,7 @@ stages:
   - prepare
   - analyze
   - build
-#  - test
+  #  - test
   - deploy
 
 composer:
@@ -112,8 +112,10 @@ build_assets:
     - gulp css:combine
   artifacts:
     paths:
+      - components
       - public/typo3conf/ext/tw_blueprint/Resources/Public/
       - public/typo3temp/assets/
+      - public/serviceworker.js
     expire_in: 1 days
     when: always
 
@@ -142,34 +144,7 @@ build_assets:
 #    when: on_failure
 #  coverage: '/^\s*Lines:\s*\d+.\d+\%/'
 
-staging:
-  stage: deploy
-  needs:
-#    - job: unit_tests
-#      artifacts: false
-    - job: build_assets
-      artifacts: true
-  before_script:
-    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-    - eval $(ssh-agent -s)
-    - ssh-add <(echo "$STAGING_PRIVATE_KEY")
-    - mkdir -p ~/.ssh
-    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-    - chmod 0755 ./dev/deploy-archive-commit.sh
-  script:
-    - >
-      ./dev/deploy-archive-commit.sh --dev
-      --repository="git@gitlab.tollwerk.net:tollwerk/blueprint-projekt.git" --branch="$CI_DEFAULT_BRANCH" --commit="$CI_COMMIT_SHA"
-      --host="$STAGING_HOST" --user="$STAGING_USER" --port="$STAGING_PORT"
-      --target="$STAGING_TARGET_DIRECTORY" --artifacts="public/typo3conf/ext/tw_blueprint/Resources/Public public/typo3temp/assets"
-  environment:
-    name: staging
-    url: https://blueprint.tollwerk.dev
-  when: on_success
-  only:
-    - develop
-
-production:
+preview:
   stage: deploy
   needs:
     #    - job: unit_tests
@@ -179,19 +154,73 @@ production:
   before_script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
     - eval $(ssh-agent -s)
-    - ssh-add <(echo "$PRODUCTION_PRIVATE_KEY")
+    - ssh-add <(echo "$PREVIEW_PRIVATE_KEY")
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - chmod 0755 ./dev/deploy-archive-commit.sh
   script:
     - >
-      ./dev/deploy-archive-commit.sh
-      --repository="git@gitlab.tollwerk.net:tollwerk/blueprint-projekt.git" --branch="$CI_DEFAULT_BRANCH" --commit="$CI_COMMIT_SHA"
-      --host="$PRODUCTION_HOST" --user="$PRODUCTION_USER" --port="$PRODUCTION_PORT"
-      --target="$PRODUCTION_TARGET_DIRECTORY" --artifacts="public/typo3conf/ext/tw_blueprint/Resources/Public public/typo3temp/assets"
+      ./dev/deploy-archive-commit.sh --dev --fractal="blueprint" --extension="$TYPO3_PROJECT_EXTENSION"
+      --repository="ssh://git@gitlab.tollwerk.net/blueprint/blueprint-projekt.git" --branch="$CI_DEFAULT_BRANCH" --commit="$CI_COMMIT_SHA"
+      --host="$PREVIEW_HOST" --user="$PREVIEW_USER" --port="$PREVIEW_PORT"
+      --target="$PREVIEW_TARGET_DIRECTORY" --artifacts="fractal.config.js public/typo3conf/ext/tw_blueprint/Resources/Public public/typo3temp/assets"
   environment:
-    name: production
-    url: https://example.com
-  when: manual
+    name: staging
+    url: https://preview.blueprint.dev
+  when: on_success
   only:
     - develop
+
+#staging:
+#  stage: deploy
+#  needs:
+##    - job: unit_tests
+##      artifacts: false
+#    - job: build_assets
+#      artifacts: true
+#  before_script:
+#    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+#    - eval $(ssh-agent -s)
+#    - ssh-add <(echo "$STAGING_PRIVATE_KEY")
+#    - mkdir -p ~/.ssh
+#    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+#    - chmod 0755 ./dev/deploy-archive-commit.sh
+#  script:
+#    - >
+#      ./dev/deploy-archive-commit.sh --sync
+#      --repository="ssh://git@gitlab.tollwerk.net/blueprint/blueprint-projekt.git" --branch="$CI_DEFAULT_BRANCH" --commit="$CI_COMMIT_SHA"
+#      --host="$STAGING_HOST" --user="$STAGING_USER" --port="$STAGING_PORT"
+#      --target="$STAGING_TARGET_DIRECTORY" --artifacts="public/typo3conf/ext/tw_blueprint/Resources/Public public/typo3temp/assets public/serviceworker.js"
+#  environment:
+#    name: staging
+#    url: https://stage.blueprint.dev
+#  when: manual
+#  only:
+#    - develop
+
+#production:
+#  stage: deploy
+#  needs:
+##    - job: unit_tests
+##      artifacts: false
+#    - job: build_assets
+#      artifacts: true
+#  before_script:
+#    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+#    - eval $(ssh-agent -s)
+#    - ssh-add <(echo "$PRODUCTION_PRIVATE_KEY")
+#    - mkdir -p ~/.ssh
+#    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+#    - chmod 0755 ./dev/deploy-archive-commit.sh
+#  script:
+#    - >
+#      ./dev/deploy-archive-commit.sh
+#      --repository="ssh://git@gitlab.tollwerk.net/blueprint/blueprint-projekt.git" --branch="$CI_DEFAULT_BRANCH" --commit="$CI_COMMIT_SHA"
+#      --host="$PRODUCTION_HOST" --user="$PRODUCTION_USER" --port="$PRODUCTION_PORT"
+#      --target="$PRODUCTION_TARGET_DIRECTORY" --artifacts="public/typo3conf/ext/tw_blueprint/Resources/Public public/typo3temp/assets public/serviceworker.js"
+#  environment:
+#    name: production
+#    url: https://blueprint.com
+#  when: manual
+#  only:
+#    - develop
