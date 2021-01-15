@@ -20,6 +20,7 @@
 *.gz binary
 *.zip binary
 *.7z binary
+*.otf binary
 *.ttf binary
 *.eot binary
 *.woff binary
